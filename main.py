@@ -1,5 +1,8 @@
+import ui
+
+
 def main():
-    print("Hello, World!")
+    print(ui.GAME_TITLE)
 
 
 if __name__ == "__main__":
