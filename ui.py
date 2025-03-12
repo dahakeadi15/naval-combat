@@ -6,6 +6,11 @@ GAME_TITLE = """
 
 """
 
+# GAME OBJECTS
+SEA = "  ~  "
+SHIP = " <=> "
+WRECKAGE = " <x> "
+
 
 def display_grid(game_state: list[list[int]], grid_size):
     c = 65
@@ -21,19 +26,15 @@ def display_grid(game_state: list[list[int]], grid_size):
     for i in range(grid_size):
         print(f"  {chr(c+i)}  |", end="")
         for j in range(grid_size):
-            if game_state[i][j] == 0:
-                # SEA
-                object = "  ~  "
-            elif game_state[i][j] == 1:
-                # SHIP
-                object = " <=> "
-            elif game_state[i][j] == 2:
-                # WRECKAGE / HIT
-                object = " <*> "
-            else:
-                # MISS
-                object = "  x  "
-            print(f"{object}", end="")
+            match game_state[i][j]:
+                case 0:
+                    print(SEA, end="")
+                case 1:
+                    print(SHIP, end="")
+                case 2:
+                    print(WRECKAGE, end="")
+                case _:
+                    print("  .  ", end="")
         print("|")
 
     print((grid_size * 5 + 7) * "-")
