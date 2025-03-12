@@ -1,3 +1,5 @@
+import os
+
 GAME_TITLE = """
  __ _ ____ _  _ ____ _      ____ ____ _  _ ___  ____ ___
  | \| |--|  \/  |--| |___   |___ [__] |\/| |==] |--|  | 
@@ -35,3 +37,7 @@ def display_grid(game_state: list[list[int]], grid_size):
         print("|")
 
     print((grid_size * 5 + 7) * "-")
+
+
+def clear_screen():
+    os.system("cls" if os.name == "nt" else "clear")
