@@ -3,9 +3,12 @@ import os
 from colorize import TextColor, color_text
 
 GAME_TITLE = """
- __ _ ____ _  _ ____ _      ____ ____ _  _ ___  ____ ___
- | \| |--|  \/  |--| |___   |___ [__] |\/| |==] |--|  | 
+__ _ ____ _  _ ____ _      ____ ____ _  _ ___  ____ ___
+| \| |--|  \/  |--| |___   |___ [__] |\/| |==] |--|  | 
+"""
 
+WELCOME_SCREEN = f"""
+WELCOME!!!
 """
 
 # GAME OBJECTS
