@@ -11,7 +11,7 @@ def main():
 
     print(ui.GAME_TITLE)
     print(ui.WELCOME_SCREEN)
-    user_name = input("Enter Your Name >")
+    user_name = input("Enter Your Name > ")
 
     player1 = player.Player(user_name)
     player2 = player.AiPlayer()
