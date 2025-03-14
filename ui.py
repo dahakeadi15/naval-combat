@@ -28,8 +28,6 @@ OF_INVALID_OPTION = color_text(f"Invalid option! Please try again.", TextColor.R
 def display_grid(game_state: list[list[int]], grid_size):
     c = 65
 
-    # TODO: Fix grid for double digit grid size
-
     print(color_text("     |", TextColor.GRAY), end="")
     for i in range(grid_size):
         print(color_text(f"  {i+1}  ", TextColor.GRAY), end="")
