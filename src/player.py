@@ -30,6 +30,9 @@ class Player:
             return True
         return False
 
+    def reset_fleet(self):
+        self.fleet = [[0 for i in range(GRID_SIZE)] for j in range(GRID_SIZE)]
+
 
 class AiPlayer(Player):
     def __init__(self):

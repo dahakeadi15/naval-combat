@@ -1,6 +1,7 @@
 import os
 
 from colorize import TextColor, color_text
+from player import GRID_SIZE
 
 GAME_TITLE = """
 __ _ ____ _  _ ____ _      ____ ____ _  _ ___  ____ ___
@@ -25,18 +26,18 @@ OF_INVALID_OPTION = color_text(f"Invalid option! Please try again.", TextColor.R
 
 
 # GAME GRID
-def display_grid(game_state: list[list[int]], grid_size):
+def display_grid(game_state: list[list[int]]):
     c = 65
 
     print(color_text("     |", TextColor.GRAY), end="")
-    for i in range(grid_size):
+    for i in range(GRID_SIZE):
         print(color_text(f"  {i+1}  ", TextColor.GRAY), end="")
     print(color_text("|", TextColor.GRAY))
-    print(color_text((grid_size * 5 + 7) * "-", TextColor.GRAY))
+    print(color_text((GRID_SIZE * 5 + 7) * "-", TextColor.GRAY))
 
-    for i in range(grid_size):
+    for i in range(GRID_SIZE):
         print(color_text(f"  {chr(c+i)}  |", TextColor.GRAY), end="")
-        for j in range(grid_size):
+        for j in range(GRID_SIZE):
             match game_state[i][j]:
                 case 0:
                     print(SEA, end="")
@@ -48,7 +49,7 @@ def display_grid(game_state: list[list[int]], grid_size):
                     print("  .  ", end="")
         print(color_text("|", TextColor.GRAY))
 
-    print(color_text((grid_size * 5 + 7) * "-", TextColor.GRAY))
+    print(color_text((GRID_SIZE * 5 + 7) * "-", TextColor.GRAY))
 
 
 def clear_screen():
