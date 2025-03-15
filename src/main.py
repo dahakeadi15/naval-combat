@@ -1,12 +1,12 @@
+import time
+
 import player
 import ui
 from colorize import TextColor, color_text
 
 
 def main():
-    user_input = "start"
     is_game_over = False
-    feedback_to = ""
 
     ui.clear_screen()
 
@@ -95,6 +95,9 @@ def main():
         except:
             error = f"A ship is already deployed at {coordinate.upper()}"
 
+    # START GAME
+    feedback = ""
+    turn = 0
     while not is_game_over:
         ui.clear_screen()
 
@@ -107,19 +110,108 @@ def main():
         print(f"\n{player2.name}'s fleet")
         ui.display_grid(player2.fleet)
 
-        print(feedback_to)
-        feedback_to = ""
+        print(feedback)
+        feedback = ""
 
-        print(ui.GAME_OPTIONS)
+        if turn % 2 == 0:
+            print(f"{player1.remaining_shots} missiles left.")
+            print("Enter target coordinates (ex. A1)")
+            print("[exit (e)]")
+            coordinate = input(">>> ")
 
-        user_input = input(">>> ")
-        match user_input.lower():
-            case "n":
-                feedback_to = ui.OF_NEW_GAME
-            case "e":
+            # Exit game
+            if coordinate.lower() == "e":
+                print(color_text("Exiting...", TextColor.GRAY))
                 is_game_over = True
-            case _:
-                feedback_to = ui.OF_INVALID_OPTION
+                return
+
+            # coordinate validation
+            if (
+                len(coordinate) != 2
+                or not coordinate[0].isalpha()
+                or not coordinate[1].isnumeric()
+            ):
+                feedback = color_text("Please enter valid coordinates", TextColor.RED)
+                continue
+
+            # extract coordinates
+            row, col = ord(coordinate[0].upper()) - ord("A"), int(coordinate[1]) - 1
+
+            # validate is within range
+            if not (0 <= row < player.GRID_SIZE and 0 <= col < player.GRID_SIZE):
+                feedback = color_text("Please enter valid coordinates", TextColor.RED)
+                continue
+
+            was_successful = player1.shoot(player2, row, col)
+            turn += 1
+            time.sleep(1)
+            if was_successful:
+                print(color_text("Direct Hit!!!", TextColor.GREEN))
+            else:
+                print(color_text("Missed!", TextColor.RED))
+            time.sleep(2)
+
+        # Player 2 Attempt hit
+        else:
+            print(f"{player2.name}'s chance.")
+            target_row, target_col = player2.random_coordinates()
+            time.sleep(1)
+            was_successful = player2.shoot(player1, target_row, target_col)
+            turn += 1
+            if was_successful:
+                print(color_text(f"Direct Hit!!!", TextColor.RED))
+            else:
+                print(color_text(f"Missed!", TextColor.GREEN))
+            time.sleep(2)
+        if (
+            player2.remaining_shots == 0
+            or player1.n_ships_operational == 0
+            or player2.n_ships_operational == 0
+        ):
+            is_game_over = True
+
+    if is_game_over:
+        ui.clear_screen()
+
+        print(ui.GAME_TITLE)
+        print(f"{player1.name} vs. {player2.name}\n")
+
+        print(color_text("Game Over!\n", TextColor.GRAY))
+
+        winner = ""
+        if player1.n_ships_operational > player2.n_ships_operational:
+            winner = player1
+        elif player1.n_ships_operational < player2.n_ships_operational:
+            winner = player2
+
+        print(
+            f"{player1.name}'s fleet"
+            + (
+                color_text(" WINNER!!!", TextColor.GREEN)
+                if winner.name == player1.name
+                else ""
+            )
+        )
+
+        ui.display_grid(player1.fleet)
+
+        print(
+            f"\n{player2.name}'s fleet"
+            + (
+                color_text(" WINNER!!!", TextColor.GREEN)
+                if winner.name == player2.name
+                else ""
+            )
+        )
+        ui.display_grid(player2.fleet)
+
+        if winner:
+            print(color_text(f"\n{winner.name} won !!!", TextColor.BRIGHT_CYAN))
+        else:
+            print("It was a draw!")
+
+        print("")
+        print(color_text("Exiting...", TextColor.GRAY))
 
 
 if __name__ == "__main__":

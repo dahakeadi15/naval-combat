@@ -23,10 +23,14 @@ class Player:
             raise errors.PlaceNotEmptyError()
 
         self.fleet[row][col] = 1
+        self.n_ships_operational += 1
 
-    def take_hit(self, row: int, col: int) -> bool:
-        if self.fleet[row][col] == 1:
-            self.fleet[row][col] = 2
+    def shoot(self, opponent, row: int, col: int) -> bool:
+        self.remaining_shots -= 1
+        if opponent.fleet[row][col] == 1:
+            opponent.fleet[row][col] = 2
+            opponent.n_ships_operational -= 1
+            opponent.n_ships_wreaked += 1
             return True
         return False
 

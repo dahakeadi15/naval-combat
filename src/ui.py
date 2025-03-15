@@ -17,13 +17,6 @@ SEA = color_text("  ~  ", TextColor.BRIGHT_BLUE)
 SHIP = color_text(" <=> ", TextColor.BRIGHT_GREEN)
 WRECKAGE = color_text(" <x> ", TextColor.BRIGHT_RED)
 
-# GAME OPTIONS
-GAME_OPTIONS = color_text(f"\nNew Game (n) | Exit (e)", TextColor.GRAY)
-
-# FEEDBACK TO USER (OF == Option Feedback)
-OF_NEW_GAME = color_text("New Game! Place your ships", TextColor.WHITE)
-OF_INVALID_OPTION = color_text(f"Invalid option! Please try again.", TextColor.RED)
-
 
 # GAME GRID
 def display_grid(game_state: list[list[int]]):
