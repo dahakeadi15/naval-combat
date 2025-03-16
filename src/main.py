@@ -179,17 +179,18 @@ def main():
         print(color_text("Game Over!\n", TextColor.GRAY))
 
         winner = ""
+
         if player1.n_ships_operational > player2.n_ships_operational:
-            winner = player1
+            winner = player1.name
         elif player1.n_ships_operational < player2.n_ships_operational:
-            winner = player2
+            winner = player2.name
 
         print(
             f"{player1.name}'s fleet"
             + (
                 color_text(" WINNER!!!", TextColor.GREEN)
-                if winner.name == player1.name
-                else ""
+                if winner == player1.name
+                else color_text(" LOST !", TextColor.RED)
             )
         )
 
@@ -199,14 +200,14 @@ def main():
             f"\n{player2.name}'s fleet"
             + (
                 color_text(" WINNER!!!", TextColor.GREEN)
-                if winner.name == player2.name
-                else ""
+                if winner == player2.name
+                else color_text(" LOST !", TextColor.RED)
             )
         )
         ui.display_grid(player2.fleet)
 
         if winner:
-            print(color_text(f"\n{winner.name} won !!!", TextColor.BRIGHT_CYAN))
+            print(color_text(f"\n{winner} won !!!", TextColor.BRIGHT_CYAN))
         else:
             print("It was a draw!")
 
