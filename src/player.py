@@ -27,12 +27,15 @@ class Player:
 
     def shoot(self, opponent, row: int, col: int) -> bool:
         self.remaining_shots -= 1
+        is_direct_hit = False
         if opponent.fleet[row][col] == 1:
             opponent.fleet[row][col] = 2
             opponent.n_ships_operational -= 1
             opponent.n_ships_wreaked += 1
-            return True
-        return False
+            is_direct_hit = True
+        move = f"{chr(ord('A') + row)}{col+1}"
+        self.moves.append((move, is_direct_hit))
+        return is_direct_hit
 
     def reset_fleet(self):
         self.fleet = [[0 for i in range(GRID_SIZE)] for j in range(GRID_SIZE)]

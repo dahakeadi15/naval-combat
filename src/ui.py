@@ -19,7 +19,7 @@ WRECKAGE = color_text(" <x> ", TextColor.BRIGHT_RED)
 
 
 # GAME GRID
-def display_grid(game_state: list[list[int]]):
+def display_grid(game_state: list[list[int]], history: list[tuple]):
     c = 65
 
     print(color_text("     |", TextColor.GRAY), end="")
@@ -40,7 +40,20 @@ def display_grid(game_state: list[list[int]]):
                     print(WRECKAGE, end="")
                 case _:
                     print("  .  ", end="")
-        print(color_text("|", TextColor.GRAY))
+        print(color_text("|", TextColor.GRAY), end="")
+
+        if len(history) > i:
+            last_move_idx = -1 * (i + 1)
+            move, is_direct_hit = history[last_move_idx]
+            print(
+                color_text(
+                    f" {move}", TextColor.GREEN if is_direct_hit else TextColor.RED
+                ),
+                end="",
+            )
+            if i == 0:
+                print(" < last", end="")
+        print("")
 
     print(color_text((GRID_SIZE * 5 + 7) * "-", TextColor.GRAY))
 

@@ -26,7 +26,7 @@ def main():
 
         print(ui.GAME_TITLE)
         print(f"{player1.name}'s fleet")
-        ui.display_grid(player1.fleet)
+        ui.display_grid(player1.fleet, player1.moves)
         print("Available Ships: ", ui.SHIP * (player.N_SHIPS - count))
 
         # Confirm deployment
@@ -105,14 +105,15 @@ def main():
         print(f"{player1.name} vs. {player2.name}\n")
         print(f"{player1.name}'s fleet")
 
-        ui.display_grid(player1.fleet)
+        ui.display_grid(player1.fleet, player1.moves)
 
         print(f"\n{player2.name}'s fleet")
-        ui.display_grid(player2.fleet)
+        ui.display_grid(player2.fleet, player2.moves)
 
         print(feedback)
         feedback = ""
 
+        # Player 1 Attempt hit
         if turn % 2 == 0:
             print(f"{player1.remaining_shots} missiles left.")
             print("Enter target coordinates (ex. A1)")
@@ -194,7 +195,7 @@ def main():
             )
         )
 
-        ui.display_grid(player1.fleet)
+        ui.display_grid(player1.fleet, player1.moves)
 
         print(
             f"\n{player2.name}'s fleet"
@@ -204,7 +205,7 @@ def main():
                 else color_text(" LOST !", TextColor.RED)
             )
         )
-        ui.display_grid(player2.fleet)
+        ui.display_grid(player2.fleet, player2.moves)
 
         if winner:
             print(color_text(f"\n{winner} won !!!", TextColor.BRIGHT_CYAN))
