@@ -1,36 +1,24 @@
 import time
 
-import player
+import player as plyr
 import ui
 from colorize import TextColor, color_text
 
 
-def main():
-    is_game_over = False
-
-    ui.clear_screen()
-
-    # START
-    print(ui.GAME_TITLE)
-    print(ui.WELCOME_SCREEN)
-    user_name = input("Enter Your Name > ")
-
-    player1 = player.Player(user_name)
-    player2 = player.AiPlayer()
-
+def place_ships(player):
     # PLACE SHIPS
     count = 0
     error = ""
-    while count <= player.N_SHIPS:
+    while count <= plyr.N_SHIPS:
         ui.clear_screen()
 
         print(ui.GAME_TITLE)
-        print(f"{player1.name}'s fleet")
-        ui.display_grid(player1.fleet, player1.moves)
-        print("Available Ships: ", ui.SHIP * (player.N_SHIPS - count))
+        print(f"{player.name}'s fleet")
+        ui.display_grid(player.fleet, player.moves)
+        print("Available Ships: ", ui.SHIP * (plyr.N_SHIPS - count))
 
         # Confirm deployment
-        if count == player.N_SHIPS:
+        if count == plyr.N_SHIPS:
             print("Are you satisfied with your battle plan?")
             print("Yes, Let's go!! -> (y) \nNo, reset positions. -> (n)")
             is_valid = False
@@ -42,7 +30,7 @@ def main():
                 elif confirmation.lower() == "n":
                     is_valid = True
                     count = 0
-                    player1.reset_fleet()
+                    player.reset_fleet()
                 else:
                     print(color_text("Please enter 'y' or 'n'", TextColor.RED))
             if is_valid:
@@ -61,7 +49,7 @@ def main():
             if count == 0:
                 continue
             count = 0
-            player1.reset_fleet()
+            player.reset_fleet()
             continue
 
         # TODO: Add undo (u) option
@@ -84,20 +72,23 @@ def main():
         row, col = ord(coordinate[0].upper()) - ord("A"), int(coordinate[1]) - 1
 
         # validate is within range
-        if not (0 <= row < player.GRID_SIZE and 0 <= col < player.GRID_SIZE):
+        if not (0 <= row < plyr.GRID_SIZE and 0 <= col < plyr.GRID_SIZE):
             error = "Please enter valid coordinates"
             continue
 
         # Try placing ship
         try:
-            player1.place_ship(row, col)
+            player.place_ship(row, col)
             count += 1
         except:
             error = f"A ship is already deployed at {coordinate.upper()}"
 
+
+def game_loop(player1: plyr.Player, player2: plyr.Player):
     # START GAME
     feedback = ""
     turn = 0
+    is_game_over = False
     while not is_game_over:
         ui.clear_screen()
 
@@ -139,7 +130,7 @@ def main():
             row, col = ord(coordinate[0].upper()) - ord("A"), int(coordinate[1]) - 1
 
             # validate is within range
-            if not (0 <= row < player.GRID_SIZE and 0 <= col < player.GRID_SIZE):
+            if not (0 <= row < plyr.GRID_SIZE and 0 <= col < plyr.GRID_SIZE):
                 feedback = color_text("Please enter valid coordinates", TextColor.RED)
                 continue
 
@@ -170,50 +161,70 @@ def main():
             or player2.n_ships_operational == 0
         ):
             is_game_over = True
+    return is_game_over
 
+
+def game_over(player1: plyr.Player, player2: plyr.Player):
+    ui.clear_screen()
+
+    print(ui.GAME_TITLE)
+    print(f"{player1.name} vs. {player2.name}\n")
+
+    print(color_text("Game Over!\n", TextColor.GRAY))
+
+    winner = ""
+
+    if player1.n_ships_operational > player2.n_ships_operational:
+        winner = player1.name
+    elif player1.n_ships_operational < player2.n_ships_operational:
+        winner = player2.name
+
+    print(
+        f"{player1.name}'s fleet"
+        + (
+            color_text(" WINNER!!!", TextColor.GREEN)
+            if winner == player1.name
+            else color_text(" LOST !", TextColor.RED)
+        )
+    )
+
+    ui.display_grid(player1.fleet, player1.moves)
+
+    print(
+        f"\n{player2.name}'s fleet"
+        + (
+            color_text(" WINNER!!!", TextColor.GREEN)
+            if winner == player2.name
+            else color_text(" LOST !", TextColor.RED)
+        )
+    )
+    ui.display_grid(player2.fleet, player2.moves)
+
+    if winner:
+        print(color_text(f"\n{winner} won !!!", TextColor.BRIGHT_CYAN))
+    else:
+        print("It was a draw!")
+
+    print("")
+    print(color_text("Exiting...", TextColor.GRAY))
+
+
+def main():
+    ui.clear_screen()
+
+    # START
+    print(ui.GAME_TITLE)
+    print(ui.WELCOME_SCREEN)
+    user_name = input("Enter Your Name > ")
+
+    player1 = plyr.Player(user_name)
+    player2 = plyr.AiPlayer()
+
+    place_ships(player1)
+
+    is_game_over = game_loop(player1, player2)
     if is_game_over:
-        ui.clear_screen()
-
-        print(ui.GAME_TITLE)
-        print(f"{player1.name} vs. {player2.name}\n")
-
-        print(color_text("Game Over!\n", TextColor.GRAY))
-
-        winner = ""
-
-        if player1.n_ships_operational > player2.n_ships_operational:
-            winner = player1.name
-        elif player1.n_ships_operational < player2.n_ships_operational:
-            winner = player2.name
-
-        print(
-            f"{player1.name}'s fleet"
-            + (
-                color_text(" WINNER!!!", TextColor.GREEN)
-                if winner == player1.name
-                else color_text(" LOST !", TextColor.RED)
-            )
-        )
-
-        ui.display_grid(player1.fleet, player1.moves)
-
-        print(
-            f"\n{player2.name}'s fleet"
-            + (
-                color_text(" WINNER!!!", TextColor.GREEN)
-                if winner == player2.name
-                else color_text(" LOST !", TextColor.RED)
-            )
-        )
-        ui.display_grid(player2.fleet, player2.moves)
-
-        if winner:
-            print(color_text(f"\n{winner} won !!!", TextColor.BRIGHT_CYAN))
-        else:
-            print("It was a draw!")
-
-        print("")
-        print(color_text("Exiting...", TextColor.GRAY))
+        game_over(player1, player2)
 
 
 if __name__ == "__main__":
